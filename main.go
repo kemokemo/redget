@@ -18,10 +18,14 @@ type body struct {
 	Description string `json:"description"`
 }
 
-var issueNum int
+var (
+	issueNum int
+	ver      bool
+)
 
 func init() {
 	flag.IntVar(&issueNum, "n", 1, "please specify issue number.")
+	flag.BoolVar(&ver, "v", false, "display version")
 	flag.Parse()
 }
 
@@ -30,6 +34,11 @@ func main() {
 }
 
 func run() int {
+	if ver {
+		fmt.Fprintf(os.Stdout, "redget version %s.%s\n", Version, Revision)
+		return 0
+	}
+
 	redmine := os.Getenv("REDMINE_URL")
 	key := os.Getenv("REDMINE_KEY")
 	if redmine == "" || key == "" {
